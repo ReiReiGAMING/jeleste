@@ -7,6 +7,9 @@
 #define SPIKE_WIDTH  17
 #define SPIKE_HEIGHT 9
 
+#define COIN_WIDTH 32 
+#define COIN_HEIGHT 32 
+
 #define screenCenterX (1920 / 2)
 #define screenCenterY (1080 / 2)
 
@@ -14,7 +17,7 @@ bool MuteSound = false; // Global variable to control sound muting
 bool PauseGame = false; // Global variable to control game pause
 bool CanMove = true; // Global variable to control player movement
 
-bool CanShift = true; //  Not unlocked yet
+bool CanShift = false; //  Not unlocked yet
 
 const char text_resume_game[] = "Resume Game";
 const char text_options[] = "Options";
@@ -68,8 +71,8 @@ int main()
         {4, 950, 50, 0},
         {5, 700, 315, 0},
         {4, 550, 50, 0},
-        {0, 0, 0, 0},
-        {0, 0, 0, 0},
+        {9, 100, 100, 0},
+        {8, 400, 400, 0},
         {0, 0, 0, 0},
         {0, 0, 0, 0},
         {0, 0, 0, 0},
@@ -192,6 +195,9 @@ int main()
     Texture2D spike_left = LoadTexture("rsc/Spike_left.png");
     Texture2D spike_down = LoadTexture("rsc/Spike_down.png");
     Texture2D spike_wide = LoadTexture("rsc/SpikeWide.png");
+    Texture2D spike_wide_right = LoadTexture("rsc/SpikeWide_right.png");
+    Texture2D spike_wide_left = LoadTexture ("rsc/SpikeWide_left.png");
+    Texture2D spike_wide_down = LoadTexture ("rsc/SpikeWide_down.png");
 
     Texture2D coin_menu_1 = LoadTexture("rsc/coin_1.png");
     Texture2D coin_menu_2 = LoadTexture("rsc/coin_2.png");
@@ -289,19 +295,21 @@ int* roomEnemies[6] = {
         {
             if (shift > 60)
             {
-                shift = 0;
             
             if (IsKeyDown (KEY_LEFT))
             {
-                ax = -16;
+                ax = -14;
+                shift = 0;
             }
-            if (IsKeyDown (KEY_UP) )
+            else if (IsKeyDown (KEY_UP) )
             {
                 ay = -50;
+                shift = 0;
             }
-            if (IsKeyDown (KEY_RIGHT) )
+            else if (IsKeyDown (KEY_RIGHT) )
             {
-                ax = 16;
+                ax = 14;
+                shift = 0;
             }
 
             
@@ -326,18 +334,24 @@ int* roomEnemies[6] = {
 
         }
 
-        if (ax > 0 )
+       if (abs(ax) > 0 )
+       {
+        if (ax > 0)
         ax -= 2;
-        if (ax == - 1)
-        ax =0 ;
-        if (vx > 0 )
-        vx -= 2;
-        if ( vx < 0)
-        vx = 0;
-        if (ax < 0 )
+        else if ( ax < 0)
         ax += 2;
-        if (vx < 0 )
+       }
+       else if ( ax == 1 || ax == -1)
+        ax = 0;
+       if ( abs(vx) > 0)
+       {
+        if ( vx > 0)
+        vx -= 2;
+        else if ( vx < 0 )
         vx += 2;
+       }
+       else if ( vx == 1 || vx == -1)
+       vx = 0;
         // Apply acceleration to velocity
         vy += ay;
         vx += ax;
@@ -625,6 +639,96 @@ if (currentRoomIdx >= 0 && currentRoomIdx < 6) {
                 ay = 0;
                 LastKeyPressed = "Wide Spike Hit!";
             }
+        }
+
+        if (pType == 6)
+        {
+
+            Rectangle wideSpikeRect = { (float)pX + (float)SPIKE_WIDTH, (float)pY+(float)SPIKE_HEIGHT+7, (float) SPIKE_HEIGHT, (float)SPIKE_WIDTH*2*4-4 };
+            DrawTextureEx(
+                spike_wide_left, (Vector2){(float)pX, (float)pY}, (float)pR, 1, WHITE // left
+            );
+
+            DrawRectangleRec(wideSpikeRect, RED);
+
+             if (CheckCollisionRecs(playerRect, wideSpikeRect))
+            {
+                // Reset player position and room
+                ballx = 400;
+                bally = 600;
+                roomy = 1;
+                roomx = 1;
+                vy = 0;
+                vx = 0;
+                ax = 0;
+                ay = 0;
+                LastKeyPressed = "Wide Spike Hit!";
+            }
+
+        }
+
+        if (pType == 7)
+        {
+
+            Rectangle wideSpikeRect = { (float)pX + 7, (float)pY+(float)SPIKE_HEIGHT+7, (float) SPIKE_HEIGHT, (float)SPIKE_WIDTH*2*4-4 };
+            DrawTextureEx(
+                spike_wide_right, (Vector2){(float)pX, (float)pY}, (float)pR, 1, WHITE // left
+            );
+
+            DrawRectangleRec(wideSpikeRect, RED);
+
+             if (CheckCollisionRecs(playerRect, wideSpikeRect))
+            {
+                // Reset player position and room
+                ballx = 400;
+                bally = 600;
+                roomy = 1;
+                roomx = 1;
+                vy = 0;
+                vx = 0;
+                ax = 0;
+                ay = 0;
+                LastKeyPressed = "Wide Spike Hit!";
+            }
+
+        }
+
+        if (pType == 8 )
+
+        {
+            Rectangle wideSpikeRect = { (float)pX + (float)SPIKE_WIDTH, (float)pY+(float)SPIKE_HEIGHT, (float)SPIKE_WIDTH*2*4-4, (float)SPIKE_HEIGHT };
+            DrawTextureEx(
+                spike_wide_down, (Vector2){(float)pX, (float)pY}, (float)pR, 1, WHITE
+            );
+
+            DrawRectangleRec(wideSpikeRect, RED);
+        }
+
+        if ( pType == 9 ) // Coin For ability or other bullshit
+        {
+            
+            if (!CanShift && roomy == 1 && roomx == 1) // Only show coin in room 1,1 if shift ability is not enabled
+
+            {
+
+            Rectangle abilityCoinRect = { (float)pX, (float)pY, (float)COIN_WIDTH, (float)COIN_HEIGHT };
+
+            DrawRectangleRec(abilityCoinRect, YELLOW);
+
+            DrawTextureEx(
+                coin_menu_1, (Vector2){(float)pX - 16, (float)pY - 16}, 0, 2, WHITE
+            );
+
+            if (CheckCollisionRecs(playerRect, abilityCoinRect))
+            {
+                LastKeyPressed = "Coin Collected!";
+                CanShift = true; // Enable the shift ability
+            }
+
+            }
+
+
+
         }
 
     }
