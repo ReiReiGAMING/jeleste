@@ -15,7 +15,9 @@
 
 bool MuteSound = false; // Global variable to control sound muting
 bool PauseGame = false; // Global variable to control game pause
+bool OptionsMenu = false; // Global variable to control options menu
 bool CanMove = true; // Global variable to control player movement
+bool Died = false; // Global variable to track if the player has died
 
 bool CanShift = false; //  Not unlocked yet
 
@@ -31,6 +33,12 @@ int text_resume_game_x = screenCenterX - textw_resume_game;
 int text_resume_game_y = screenCenterY - FontSize_Pause / 2;
 
 int pause_menu_option = 0; // Variable to track the selected pause menu option
+
+int resx = 400;
+int resy = 400;
+int resrx = 1;
+int resry = 1;
+
 
 
 
@@ -72,7 +80,7 @@ int main()
         {5, 700, 315, 0},
         {4, 550, 50, 0},
         {9, 100, 100, 0},
-        {8, 400, 400, 0},
+        {0, 0, 0, 0},
         {0, 0, 0, 0},
         {0, 0, 0, 0},
         {0, 0, 0, 0},
@@ -250,7 +258,7 @@ int* roomEnemies[6] = {
             PlaySound(music); // Play sound if not already playing
         }
 
-        FrameCount_Pause++;
+        FrameCount_Pause+=2;
         shift += 1;
         yframe += 1;
         // 1. Event handling
@@ -258,9 +266,17 @@ int* roomEnemies[6] = {
         prevballx = ballx; // <-- Add this line
 
         if (IsKeyPressed(KEY_ESCAPE)) {
+            if (OptionsMenu)
+            {
+                OptionsMenu = false; // Disable options menu
+                FrameCount_Pause = 0;
+            }
+            else
+            {
             PauseGame = !PauseGame; // Toggle pause state
             FrameCount_Pause = 0; // Reset frame count when pausing
             pause_menu_option = 0;
+            }
         }
 
 
@@ -516,20 +532,11 @@ if (currentRoomIdx >= 0 && currentRoomIdx < 6) {
             );
 
             //DrawRectangleRec(playerRect, GREEN);
-            DrawRectangleRec(spikeRect, RED);
+            //DrawRectangleRec(spikeRect, RED);
 
             if (CheckCollisionRecs(playerRect, spikeRect))
             {
-                // Reset player position and room
-                ballx = 400;
-                bally = 600;
-                roomy = 1;
-                roomx = 1;
-                vy = 0;
-                vx = 0;
-                ax = 0;
-                ay = 0;
-                LastKeyPressed = "Spike Hit!";
+               Died = true;
             }
         }
 
@@ -543,20 +550,11 @@ if (currentRoomIdx >= 0 && currentRoomIdx < 6) {
             );
 
             //DrawRectangleRec(playerRect, GREEN);
-            DrawRectangleRec(spikeRect, RED);
+            //DrawRectangleRec(spikeRect, RED);
 
-            if (CheckCollisionRecs(playerRect, spikeRect))
+             if (CheckCollisionRecs(playerRect, spikeRect))
             {
-                // Reset player position and room
-                ballx = 400;
-                bally = 600;
-                roomy = 1;
-                roomx = 1;
-                vy = 0;
-                vx = 0;
-                ax = 0;
-                ay = 0;
-                LastKeyPressed = "Spike Hit!";
+               Died = true;
             }
         
         }
@@ -569,20 +567,11 @@ if (currentRoomIdx >= 0 && currentRoomIdx < 6) {
             );
 
             //DrawRectangleRec(playerRect, GREEN);
-            DrawRectangleRec(spikeRect, RED);
+            //DrawRectangleRec(spikeRect, RED);
 
-            if (CheckCollisionRecs(playerRect, spikeRect))
+             if (CheckCollisionRecs(playerRect, spikeRect))
             {
-                // Reset player position and room
-                ballx = 400;
-                bally = 600;
-                roomy = 1;
-                roomx = 1;
-                vy = 0;
-                vx = 0;
-                ax = 0;
-                ay = 0;
-                LastKeyPressed = "Spike Hit!";
+               Died = true;
             }
         
         }
@@ -597,20 +586,11 @@ if (currentRoomIdx >= 0 && currentRoomIdx < 6) {
             );
 
             //DrawRectangleRec(playerRect, GREEN);
-            DrawRectangleRec(upsideDownSpikeRect, RED);
+            //DrawRectangleRec(upsideDownSpikeRect, RED);
 
             if (CheckCollisionRecs(playerRect, upsideDownSpikeRect))
             {
-                // Reset player position and room
-                ballx = 400;
-                bally = 600;
-                roomy = 1;
-                roomx = 1;
-                vy = 0;
-                vx = 0;
-                ax = 0;
-                ay = 0;
-                LastKeyPressed = "Upside Down Spike Hit!";
+               Died = true;
             }
         }
 
@@ -628,16 +608,7 @@ if (currentRoomIdx >= 0 && currentRoomIdx < 6) {
 
             if (CheckCollisionRecs(playerRect, wideSpikeRect))
             {
-                // Reset player position and room
-                ballx = 400;
-                bally = 600;
-                roomy = 1;
-                roomx = 1;
-                vy = 0;
-                vx = 0;
-                ax = 0;
-                ay = 0;
-                LastKeyPressed = "Wide Spike Hit!";
+                Died = true;
             }
         }
 
@@ -651,18 +622,9 @@ if (currentRoomIdx >= 0 && currentRoomIdx < 6) {
 
             DrawRectangleRec(wideSpikeRect, RED);
 
-             if (CheckCollisionRecs(playerRect, wideSpikeRect))
+            if (CheckCollisionRecs(playerRect, wideSpikeRect))
             {
-                // Reset player position and room
-                ballx = 400;
-                bally = 600;
-                roomy = 1;
-                roomx = 1;
-                vy = 0;
-                vx = 0;
-                ax = 0;
-                ay = 0;
-                LastKeyPressed = "Wide Spike Hit!";
+                Died = true;
             }
 
         }
@@ -677,18 +639,9 @@ if (currentRoomIdx >= 0 && currentRoomIdx < 6) {
 
             DrawRectangleRec(wideSpikeRect, RED);
 
-             if (CheckCollisionRecs(playerRect, wideSpikeRect))
+            if (CheckCollisionRecs(playerRect, wideSpikeRect))
             {
-                // Reset player position and room
-                ballx = 400;
-                bally = 600;
-                roomy = 1;
-                roomx = 1;
-                vy = 0;
-                vx = 0;
-                ax = 0;
-                ay = 0;
-                LastKeyPressed = "Wide Spike Hit!";
+                Died = true;
             }
 
         }
@@ -702,6 +655,11 @@ if (currentRoomIdx >= 0 && currentRoomIdx < 6) {
             );
 
             DrawRectangleRec(wideSpikeRect, RED);
+
+            if (CheckCollisionRecs(playerRect, wideSpikeRect))
+            {
+                Died = true;
+            }
         }
 
         if ( pType == 9 ) // Coin For ability or other bullshit
@@ -726,14 +684,24 @@ if (currentRoomIdx >= 0 && currentRoomIdx < 6) {
             }
 
             }
-
-
-
+        }
+        if ( pType == 10 )
+        {
+            if ( roomy == 1 && roomx == 1)
+            {
+                Rectangle RespawnZone = { (float)pX, (float)pY-(float)PLAYER_HEIGHT, (float)PLAYER_WIDTH*3, (float)PLAYER_HEIGHT };
+            }
         }
 
     }
+    if (Died)
+    {
+        PauseGame = true; // Pause the game when the player dies
+    }
 
     if ( PauseGame )
+    {
+        if (!Died)
     {
         Rectangle pauseRect = { 0, 0, (float)GetScreenWidth(), (float)GetScreenHeight() };
 
@@ -777,8 +745,13 @@ else if (FrameCount_Pause >= 28 && FrameCount_Pause < 32)
     DrawTextureEx(coin_menu_8, coinPos, 0, coinScale, WHITE);
 }
 else if (FrameCount_Pause >= 32)
+
 {
     DrawTextureEx(coin_menu_1, coinPos, 0, coinScale, WHITE);
+
+    if (!OptionsMenu)
+
+    {
 
     Rectangle text_resume_game_outline = { (float)screenCenterX - MeasureText(text_resume_game, FontSize_Pause)/2 - 15, (float)text_resume_game_y-150-10, (float)MeasureText(text_resume_game, FontSize_Pause) + 30, (float)FontSize_Pause + 20 };
     Rectangle text_options_outline = { (float)screenCenterX - MeasureText(text_options, FontSize_Pause)/2 - 15, (float)text_resume_game_y-10, (float)MeasureText(text_options, FontSize_Pause) + 30, (float)FontSize_Pause + 20 };
@@ -787,7 +760,7 @@ else if (FrameCount_Pause >= 32)
     DrawTextEx(Alagard, text_resume_game, Vector2{(float)screenCenterX - MeasureText(text_resume_game, 70)/2, (float)text_resume_game_y-150} , FontSize_Pause, 1, BLACK);
     DrawTextEx(Alagard, text_options, Vector2{(float)screenCenterX - MeasureText(text_options, 70)/2, (float)text_resume_game_y} , FontSize_Pause, 1, BLACK);
     DrawTextEx(Alagard, text_exit_game, Vector2{(float)screenCenterX - MeasureText(text_exit_game, 70)/2, (float)text_resume_game_y+150} , FontSize_Pause, 1, BLACK);
-
+    
 
     if (pause_menu_option == 1) {
         if (IsKeyPressed(KEY_ENTER)) {
@@ -797,7 +770,11 @@ else if (FrameCount_Pause >= 32)
         DrawRectangleRec(text_resume_game_outline, Fade (WHITE, 0.25f));
     } else if (pause_menu_option == 2) {
         DrawRectangleRec(text_options_outline, Fade (WHITE, 0.25f));
-       
+        if (IsKeyPressed(KEY_ENTER)) {
+            FrameCount_Pause = 0;
+            OptionsMenu = true; // Enable options menu
+        }
+      
     } else if (pause_menu_option == 3) {
         DrawRectangleRec(text_exit_game_outline, Fade (WHITE, 0.25f));
         if (IsKeyPressed(KEY_ENTER)) {
@@ -813,9 +790,37 @@ else if (FrameCount_Pause >= 32)
         pause_menu_option--;
         if (pause_menu_option < 1) pause_menu_option = 3; // Loop back to the last option
     }
+    }
+}
+    else if (OptionsMenu)
+    {
+        
+    }
+
 
 
 }
+    else if (Died)
+    {
+        Rectangle pauseRect = { 0, 0, (float)GetScreenWidth(), (float)GetScreenHeight() };
+        DrawRectangleRec(pauseRect, Fade(BLACK, 0.8f));
+        DrawTextEx(Alagard, "You Died!", Vector2{(float)screenCenterX - MeasureText("You Died!", 70)/2, (float)screenCenterY - 50} , 70, 1, RED);
+        DrawTextEx(Alagard, "Press Enter to respawn", Vector2{(float)screenCenterX - MeasureText("Press Enter to respawn", 50)/2, (float)screenCenterY + 50} , 50, 1, WHITE);
+        StopSound(music); // Stop the music when the player dies
+        if (IsKeyPressed(KEY_ENTER)) {
+            Died = false; // Reset death state
+            PauseGame = false; // Resume the game
+            ballx = resx; // Reset player position
+            bally = resy;
+            roomx = resrx;
+            roomy = resry;
+            vy = 10; // Reset player velocity
+            ay = 0;
+            vx = 0;
+            ax = 0;
+ 
+        }
+    }
 
 
 
