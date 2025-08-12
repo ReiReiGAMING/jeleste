@@ -18,6 +18,7 @@ bool PauseGame = false; // Global variable to control game pause
 bool OptionsMenu = false; // Global variable to control options menu
 bool CanMove = true; // Global variable to control player movement
 bool Died = false; // Global variable to track if the player has died
+bool MainMenu = true; // Global variable to control main menu state
 
 bool CanShift = false; //  Not unlocked yet
 
@@ -46,6 +47,31 @@ Font Alagard;
 
 
 int FrameCount_Pause = 0;
+
+int spinning_coin ( int fun_coin_poz_x, int fun_coin_poz_y, int fun_coin_speed, int fun_coin_size, int fun_coin_times)
+{
+
+    // fun_coin_poz_x = X position of the coin
+    // fun_coin_poz_y = Y position of the coin
+    // fun_coin_speed = Speed of the coin rotation
+    // fun_coin_size = Size of the coin
+    // fun_coin_times = How many times the coin should spin
+
+    int fun_coin_frame = 1;
+
+    Texture2D fun_coin_list [9] = {
+        LoadTexture("rsc/coin_1.png"),
+        LoadTexture("rsc/coin_2.png"),
+        LoadTexture("rsc/coin_3.png"),
+        LoadTexture("rsc/coin_4.png"),
+        LoadTexture("rsc/coin_5.png"),
+        LoadTexture("rsc/coin_6.png"),
+        LoadTexture("rsc/coin_7.png"),
+        LoadTexture("rsc/coin_8.png")
+    };
+   
+
+}
 
 int main()
 {
@@ -195,6 +221,10 @@ int main()
     Texture2D player = LoadTexture("rsc/Player-Idle-Right.png");
     Texture2D player_right = LoadTexture("rsc/Player-Idle-Right.png");
     Texture2D player_left = LoadTexture("rsc/Player-Idle-Left.png");
+
+    // Main Menu textures
+
+    Texture2D Happy_Merchant = LoadTexture("rsc/Happy_merchant.png");
     
     // Textures of Spikes / Enemies can be loaded here if needed
 
@@ -280,7 +310,7 @@ int* roomEnemies[6] = {
         }
 
 
-        if (!PauseGame)
+        if (!PauseGame || MainMenu) // Only allow movement if not paused or in main menu
         {
         if(IsKeyDown(KEY_RIGHT)){
             ballx += 15;
@@ -419,7 +449,8 @@ if (currentRoomIdx >= 0 && currentRoomIdx < 6) {
 }
 
 // Now you can use currentRoomEnemy in both update and draw sections
-
+if ( !MainMenu )
+{
     for (int i = 0; i < 20; i++)
     {
         if (currentRoomObj[i][0] < 1) continue; // Skip inactive objects
@@ -514,6 +545,7 @@ if (currentRoomIdx >= 0 && currentRoomIdx < 6) {
 
 
     for (int i = 0; i <= 19; i++)
+
     {
         if (currentRoomEnemy[i][0] < 1) continue; // Skip inactive objects
 
@@ -694,6 +726,7 @@ if (currentRoomIdx >= 0 && currentRoomIdx < 6) {
         }
 
     }
+}
     if (Died)
     {
         PauseGame = true; // Pause the game when the player dies
@@ -701,7 +734,7 @@ if (currentRoomIdx >= 0 && currentRoomIdx < 6) {
 
     if ( PauseGame )
     {
-        if (!Died)
+        if (!Died || MainMenu)
     {
         Rectangle pauseRect = { 0, 0, (float)GetScreenWidth(), (float)GetScreenHeight() };
 
@@ -820,6 +853,11 @@ else if (FrameCount_Pause >= 32)
             ax = 0;
  
         }
+    }
+
+    else if (MainMenu)
+    {
+
     }
 
 
