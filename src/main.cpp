@@ -48,15 +48,13 @@ Font Alagard;
 
 int FrameCount_Pause = 0;
 
-int spinning_coin ( int fun_coin_poz_x, int fun_coin_poz_y, int fun_coin_speed, int fun_coin_size, int fun_coin_times)
+int spinning_coin ( int fun_coin_poz_x, int fun_coin_poz_y, int fun_coin_size)
 {
 
     // fun_coin_poz_x = X position of the coin
     // fun_coin_poz_y = Y position of the coin
     // fun_coin_speed = Speed of the coin rotation
     // fun_coin_size = Size of the coin
-    // fun_coin_times = How many times the coin should spin
-    bool fun_coin_forever = false;
 
     int fun_coin_frame = 1;
 
@@ -77,17 +75,11 @@ int spinning_coin ( int fun_coin_poz_x, int fun_coin_poz_y, int fun_coin_speed, 
         LoadTexture("rsc/coin_8.png")
     };
 
-    if ( fun_coin_frame == 0)
-    {
-        DrawTextureEx(
-            fun_coin_list[fun_coin_frame], (Vector2){(float)fun_coin_poz_x, (float)fun_coin_poz_y}, 0, (float)fun_coin_size, WHITE
-        );
-        fun_coin_frame += 1;
+    DrawTextureEx(
+        fun_coin_list[fun_coin_frame], (Vector2){(float)fun_coin_poz_x, (float)fun_coin_poz_y}, 0, (float)fun_coin_size, WHITE
+    );
 
-    }
 
-    
-   
 
 }
 
@@ -879,8 +871,10 @@ else if (FrameCount_Pause >= 32)
     else if (MainMenu)
     {
         DrawTextureEx(Happy_Merchant, (Vector2){0, 0}, 0, 1, WHITE);
-        DrawTextEx(Alagard, "Tower Game", Vector2{(float)screenCenterX - MeasureText("Tower Game", 70)/2, (float)screenCenterY - 150} , 70, 1, WHITE);
-        DrawTextEx(Alagard, "Press Enter to Start", Vector2{(float)screenCenterX - MeasureText("Press Enter to Start", 50)/2, (float)screenCenterY + 50} , 50, 1, WHITE);
+        DrawTextureEx(coin_menu_1, Vector2{ screenCenterX-100, -100}, 0 ,40, WHITE);
+        DrawTextEx(Alagard, "Jeleste", Vector2{(float)screenCenterX - MeasureText("Jeleste", 70)/2, (float)screenCenterY - 150} , 70, 1, BLACK);
+        DrawTextEx(Alagard, "Start Game", Vector2{(float)screenCenterX - MeasureText("Start Game", 50)/2, (float)screenCenterY + 50} , 50, 1, BLACK);
+
 
         if (IsKeyPressed(KEY_ENTER)) {
             MainMenu = false; // Exit main menu
