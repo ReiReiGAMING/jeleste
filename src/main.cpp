@@ -56,10 +56,17 @@ int spinning_coin ( int fun_coin_poz_x, int fun_coin_poz_y, int fun_coin_speed, 
     // fun_coin_speed = Speed of the coin rotation
     // fun_coin_size = Size of the coin
     // fun_coin_times = How many times the coin should spin
+    bool fun_coin_forever = false;
 
     int fun_coin_frame = 1;
 
+    if (fun_coin_frame > 9 )
+    {
+        fun_coin_frame = 1;
+    }
+
     Texture2D fun_coin_list [9] = {
+        LoadTexture("rsc/coin_1.png"),
         LoadTexture("rsc/coin_1.png"),
         LoadTexture("rsc/coin_2.png"),
         LoadTexture("rsc/coin_3.png"),
@@ -69,6 +76,17 @@ int spinning_coin ( int fun_coin_poz_x, int fun_coin_poz_y, int fun_coin_speed, 
         LoadTexture("rsc/coin_7.png"),
         LoadTexture("rsc/coin_8.png")
     };
+
+    if ( fun_coin_frame == 0)
+    {
+        DrawTextureEx(
+            fun_coin_list[fun_coin_frame], (Vector2){(float)fun_coin_poz_x, (float)fun_coin_poz_y}, 0, (float)fun_coin_size, WHITE
+        );
+        fun_coin_frame += 1;
+
+    }
+
+    
    
 
 }
@@ -296,6 +314,8 @@ int* roomEnemies[6] = {
         prevballx = ballx; // <-- Add this line
 
         if (IsKeyPressed(KEY_ESCAPE)) {
+            if (!MainMenu)
+            {
             if (OptionsMenu)
             {
                 OptionsMenu = false; // Disable options menu
@@ -307,6 +327,7 @@ int* roomEnemies[6] = {
             FrameCount_Pause = 0; // Reset frame count when pausing
             pause_menu_option = 0;
             }
+        }
         }
 
 
@@ -727,14 +748,14 @@ if ( !MainMenu )
 
     }
 }
-    if (Died)
+    if (Died || MainMenu)
     {
         PauseGame = true; // Pause the game when the player dies
     }
 
     if ( PauseGame )
     {
-        if (!Died || MainMenu)
+        if (!Died && !MainMenu)
     {
         Rectangle pauseRect = { 0, 0, (float)GetScreenWidth(), (float)GetScreenHeight() };
 
@@ -857,12 +878,27 @@ else if (FrameCount_Pause >= 32)
 
     else if (MainMenu)
     {
+        DrawTextureEx(Happy_Merchant, (Vector2){0, 0}, 0, 1, WHITE);
+        DrawTextEx(Alagard, "Tower Game", Vector2{(float)screenCenterX - MeasureText("Tower Game", 70)/2, (float)screenCenterY - 150} , 70, 1, WHITE);
+        DrawTextEx(Alagard, "Press Enter to Start", Vector2{(float)screenCenterX - MeasureText("Press Enter to Start", 50)/2, (float)screenCenterY + 50} , 50, 1, WHITE);
 
+        if (IsKeyPressed(KEY_ENTER)) {
+            MainMenu = false; // Exit main menu
+            PauseGame = false; // Resume the game
+            ballx = resx; // Reset player position
+            bally = resy;
+            roomx = resrx;
+            roomy = resry;
+            vy = 10; // Reset player velocity
+            ay = 0;
+            vx = 0;
+            ax = 0;
     }
 
 
 
     }
+}
 
         // Debug larp
 
