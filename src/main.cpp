@@ -25,14 +25,30 @@ bool MainMenu = true; // Global variable to control main menu state
 
 bool CanShift = false; //  Not unlocked yet
 
+// animation control variables
+
+int frame_f_start;
+int frame_main_menu_coin;
+
+// Main Menu images
+
+int main_coin_pozx = screenCenterX - 400;
+float main_coin_pozy = screenCenterY + 800;
+
+int main_coin_accel_x= 0;
+int main_coin_accel_y = 0;
+
+
 const char text_resume_game[] = "Resume Game";
 const char text_options[] = "Options";
 const char text_exit_game[] = "Exit Game";
 const char text_return_menu[] = "Return to Main Menu";
+const char text_credits_creator[] = "Game Created by Rei";
 int FontSize_Pause = 70;
 int textw_resume_game = MeasureText(text_resume_game, FontSize_Pause);
 int textw_options = MeasureText(text_options, FontSize_Pause);
 int textw_exit_game = MeasureText(text_exit_game, FontSize_Pause);
+int textw_credits_creator = MeasureText(text_credits_creator, FontSize_Pause);
 
 int text_resume_game_x = screenCenterX - textw_resume_game;
 int text_resume_game_y = screenCenterY - FontSize_Pause / 2;
@@ -99,14 +115,27 @@ int main()
     Texture2D spike_wide_left = LoadTexture ("rsc/SpikeWide_left.png");
     Texture2D spike_wide_down = LoadTexture ("rsc/SpikeWide_down.png");
 
-    Texture2D coin_rh_1 = LoadTexture("rsc/coin_1.png");
-    Texture2D coin_rh_2 = LoadTexture("rsc/coin_2.png");
-    Texture2D coin_rh_3 = LoadTexture("rsc/coin_3.png");
-    Texture2D coin_rh_4 = LoadTexture("rsc/coin_4.png");
-    Texture2D coin_rh_5 = LoadTexture("rsc/coin_5.png");
-    Texture2D coin_rh_6 = LoadTexture("rsc/coin_6.png");
-    Texture2D coin_rh_7 = LoadTexture("rsc/coin_7.png");
-    Texture2D coin_rh_8 = LoadTexture("rsc/coin_8.png");
+    // Animations very hot area 😳😳😳
+
+    Texture2D coin = LoadTexture("rsc/coin.png");
+
+    Texture2D coin_rh_1 = LoadTexture("rsc/coin_rh_1.png");
+    Texture2D coin_rh_2 = LoadTexture("rsc/coin_rh_2.png");
+    Texture2D coin_rh_3 = LoadTexture("rsc/coin_rh_3.png");
+    Texture2D coin_rh_4 = LoadTexture("rsc/coin_rh_4.png");
+    Texture2D coin_rh_5 = LoadTexture("rsc/coin_rh_5.png");
+    Texture2D coin_rh_6 = LoadTexture("rsc/coin_rh_6.png");
+    Texture2D coin_rh_7 = LoadTexture("rsc/coin_rh_7.png");
+    Texture2D coin_rh_8 = LoadTexture("rsc/coin_rh_8.png");
+
+    Texture2D coin_rv_1 = LoadTexture("rsc/coin_rv_1.png");
+    Texture2D coin_rv_2 = LoadTexture("rsc/coin_rv_2.png");
+    Texture2D coin_rv_3 = LoadTexture("rsc/coin_rv_3.png");
+    Texture2D coin_rv_4 = LoadTexture("rsc/coin_rv_4.png");
+    Texture2D coin_rv_5 = LoadTexture("rsc/coin_rv_5.png");
+    Texture2D coin_rv_6 = LoadTexture("rsc/coin_rv_6.png");
+    Texture2D coin_rv_7 = LoadTexture("rsc/coin_rv_7.png");
+    Texture2D coin_rv_8 = LoadTexture("rsc/coin_rv_8.png");
 
     Rectangle player_hitbox = (Rectangle){0, 0, PLAYER_WIDTH*0.8, PLAYER_HEIGHT*0.8}; // Player hitbox for collision detection
 
@@ -131,8 +160,50 @@ int* rooms[6] = {
         
         if (MainMenu)
         {
-            DrawTextureEx(coin_menu_1,Vector2{50,-100},0,40,WHITE);
+            if (frame_f_start <= 101)
+            {
+                ClearBackground(BLACK);
+                DrawTextEx (Alagard, text_credits_creator, Vector2 {(float)screenCenterX - MeasureText(text_credits_creator,70)/2, (float)screenCenterY-35}, 70, 1, WHITE);
+            }
+            else {
+
+   if (frame_f_start >= 101 && frame_f_start < 229)
+{
+    int cycleFrame = (frame_f_start - 101) % 16;   // 0–31 → one loop
+    int frameIndex = cycleFrame / 2;               // 0–7 → pick texture
+
+    switch (frameIndex)
+    {
+        case 0: DrawTextureEx(coin_rv_1, { (float)main_coin_pozx, (float)main_coin_pozy }, 0, 40, WHITE); break;
+        case 1: DrawTextureEx(coin_rv_2, { (float)main_coin_pozx, (float)main_coin_pozy }, 0, 40, WHITE); break;
+        case 2: DrawTextureEx(coin_rv_3, { (float)main_coin_pozx, (float)main_coin_pozy }, 0, 40, WHITE); break;
+        case 3: DrawTextureEx(coin_rv_4, { (float)main_coin_pozx, (float)main_coin_pozy }, 0, 40, WHITE); break;
+        case 4: DrawTextureEx(coin_rv_5, { (float)main_coin_pozx, (float)main_coin_pozy }, 0, 40, WHITE); break;
+        case 5: DrawTextureEx(coin_rv_6, { (float)main_coin_pozx, (float)main_coin_pozy }, 0, 40, WHITE); break;
+        case 6: DrawTextureEx(coin_rv_7, { (float)main_coin_pozx, (float)main_coin_pozy }, 0, 40, WHITE); break;
+        case 7: DrawTextureEx(coin_rv_8, { (float)main_coin_pozx, (float)main_coin_pozy }, 0, 40, WHITE); break;
+    }
+}
+
+        if (frame_f_start >= 229)
+        {
+            DrawTextureEx(coin, Vector2 {(float)main_coin_pozx, (float)main_coin_pozy}, 0, 40, WHITE);
+            if (frame_f_start >= 250)
+            {
+                if (main_coin_pozx != 20 )
+                main 
+            }
         }
+
+
+                if (main_coin_pozy != screenCenterY - 400)
+                main_coin_pozy -= 20;
+
+            }
+            frame_f_start +=1;
+        }
+        
+        DrawText(std::to_string(frame_f_start).c_str(), 10, 40, 20, WHITE);
 
         EndDrawing();
 
